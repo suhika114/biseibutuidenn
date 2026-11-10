@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>微生物遺伝学｜小テスト対策63問</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--ink:#182238;--muted:#68748a;--accent:#3659d9;--good:#16834b;--bad:#c33d46;--line:#e3e8f1}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif;line-height:1.65}
+header{background:linear-gradient(120deg,#263f9f,#5575e8);color:white;padding:calc(25px + env(safe-area-inset-top)) 18px 30px}
+.wrap{max-width:850px;margin:auto;padding:0 16px}h1{font-size:clamp(22px,5vw,32px);margin:0 0 5px}header p{margin:0;color:#e6ebff}
+main{padding:18px 0 50px}.panel,.question{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:0 0 14px;box-shadow:0 5px 18px #1c31500a}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.stat{background:#eef2ff;border-radius:12px;padding:9px 13px;font-size:14px}
+label{font-weight:650;display:block;margin-bottom:6px}select,button{font:inherit}select{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:white;color:var(--ink)}
+.progress{height:8px;background:#e9edf5;border-radius:20px;overflow:hidden;margin:12px 0}.bar{height:100%;background:var(--accent);width:0;transition:.2s}
+.qmeta{font-size:13px;color:var(--muted);margin-bottom:8px}.qtext{font-size:19px;font-weight:750;margin:0 0 14px}
+.options{display:grid;gap:9px}.opt{width:100%;text-align:left;padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:white;color:var(--ink);cursor:pointer}
+.opt:hover{border-color:#9aabea;background:#f8f9ff}.opt{min-height:48px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}.opt:disabled{cursor:default;opacity:1}.opt.correct{border-color:var(--good);background:#eaf8f0}.opt.wrong{border-color:var(--bad);background:#fff0f0}
+.feedback{margin-top:14px;padding:13px;border-radius:11px;background:#f2f5fa}.feedback.good{background:#eaf8f0}.feedback.bad{background:#fff0f0}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}button.primary,button.secondary{border:0;border-radius:11px;padding:12px 16px;cursor:pointer;font-weight:700;min-height:46px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.primary{background:var(--accent);color:white}.secondary{background:#edf0f7;color:#26334d}.primary:disabled{opacity:.4;cursor:default}
+.small{font-size:13px;color:var(--muted)}.hidden{display:none!important}.result{font-size:30px;font-weight:800}.list{display:grid;gap:8px}.reviewitem{padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:20px 16px calc(20px + env(safe-area-inset-bottom))}
+@media(max-width:520px){.wrap{padding:0 12px}header{padding-left:16px;padding-right:16px}.panel,.question{padding:15px;border-radius:14px}.qtext{font-size:18px}.actions button{flex:1 1 130px}.stat{font-size:13px;padding:8px 10px}}\n</style>
+</head>
+<body>
+<header><div class="wrap"><h1>微生物遺伝学｜小テスト対策</h1><p>講義資料（第2〜5回）・過去問をもとにした4択63問</p></div></header>
+<main class="wrap">
+<section class="panel">
+ <div class="stats"><div class="stat">全63問</div><div class="stat">4択・解説つき</div><div class="stat">間違えた問題を復習</div></div>
+ <label for="category">出題範囲</label><select id="category"><option value="all">すべて（63問）</option><option value="gene">第2回：遺伝子・転写・翻訳</option><option value="rep1">第3回：DNA複製の基本</option><option value="rep2">第4回：DNA複製に関わる酵素</option><option value="cycle">第5回：細胞周期・複製開始の調節</option><option value="past">過去問形式：総合確認</option><option value="wrong">間違えた問題だけ</option></select>
+ <div class="progress"><div class="bar" id="bar"></div></div><div class="small" id="progressText">準備完了</div>
+</section>
+<section class="question" id="quiz">
+ <div class="qmeta" id="meta"></div><p class="qtext" id="qtext">「スタート」を押して始めよう。</p>
+ <div class="options" id="options"></div><div id="feedback"></div>
+ <div class="actions"><button class="primary" id="start">スタート</button><button class="primary hidden" id="next" disabled>次の問題</button><button class="secondary" id="restart">最初から</button></div>
+</section>
+<section class="panel hidden" id="result">
+ <div class="small">今回の結果</div><div class="result" id="score"></div><p id="resultText"></p>
+ <div class="actions"><button class="primary" id="retryWrong">間違えた問題を解き直す</button><button class="secondary" id="again">同じ範囲をもう一度</button></div>
+</section>
+<section class="panel"><h3>間違えた問題</h3><div class="small" id="wrongCount">まだありません。</div><div class="list" id="wrongList"></div></section>
+<section class="panel" id="historyPanel">
+ <h3>学習履歴・累計成績</h3>
+ <div class="stats">
+  <div class="stat">挑戦回数：<b id="totalSessions">0</b>回</div>
+  <div class="stat">累計回答：<b id="totalAnswered">0</b>問</div>
+  <div class="stat">累計正答率：<b id="overallRate">—</b></div>
+ </div>
+ <div class="small" id="historySummary">学習履歴はまだありません。</div>
+ <div class="list" id="historyList"></div>
+ <div class="actions"><button class="secondary" id="clearHistory">学習履歴を消去</button><button class="secondary" id="clearWrong">間違えた問題をリセット</button></div>
+ <p class="small">※履歴・復習リストは、この端末のSafari内に保存されます。同じ端末・同じブラウザで開いた場合に引き継がれます。</p>
+</section>
+</main><footer>※講義資料に記載された内容を中心に構成。講義資料にない細部は出題対象にしていません。</footer>
+<script>
+const raw = [
+["gene","遺伝子とは何か？","タンパク質や機能性RNAを作るために必要なDNA領域","細胞膜を作る脂質の集まり","DNA全体のこと","アミノ酸が連結した領域","遺伝子はタンパク質（酵素）やtRNA・rRNAなどの機能性RNAを作るために必要なDNA領域。"],
+["gene","遺伝子発現は主にどの2段階からなる？","転写と翻訳","複製と分裂","解糖と発酵","吸収と排出","講義資料では、DNAからRNAを作る転写と、RNAからタンパク質を作る翻訳の2段階として説明されている。"],
+["gene","転写とはどのような過程？","DNAをもとにRNAを合成する過程","RNAをもとにDNAを合成する過程","RNAからタンパク質を合成する過程","タンパク質を分解する過程","転写ではDNAの一方の鎖を鋳型として、相補的なRNAが合成される。"],
+["gene","翻訳とはどのような過程？","RNAの情報をもとにタンパク質を合成する過程","DNAを複製する過程","DNAからRNAを合成する過程","RNAを分解する過程","翻訳ではmRNAのコドンに対応するアミノ酸がつながり、タンパク質になる。"],
+["gene","転写を直接担う酵素はどれ？","RNAポリメラーゼ","DNAポリメラーゼ","DNAリガーゼ","ヘリカーゼ","RNAポリメラーゼはDNAの片方の鎖を鋳型にしてRNAを合成する。"],
+["gene","RNAポリメラーゼが鋳型として使うのは？","DNA二本鎖のうち片方の鎖","DNA二本鎖の両方を同時に使う","mRNA","タンパク質","転写ではDNA二本鎖の片方（鋳型鎖）を使い、相補的なRNAを作る。"],
+["gene","RNAポリメラーゼによるRNA合成の方向は？","5’→3’","3’→5’","両方向に同時","方向は決まっていない","講義資料で強調されている通り、RNAポリメラーゼは5’から3’の方向にRNAを伸長する。"],
+["gene","プロモーターの役割は？","RNAポリメラーゼが結合して転写を開始するDNA領域","転写を終了させるDNA領域","翻訳を行うRNA領域","DNA複製を終える酵素","プロモーターは転写開始の位置と向きを決める。"],
+["gene","ターミネーターとは何か？","RNAポリメラーゼが転写を終えてDNAから離れる領域","RNAポリメラーゼが結合する開始領域","アミノ酸が結合する場所","DNA複製の開始点","ターミネーターは転写の終了に関わるDNA領域。"],
+["gene","講義資料で、遺伝子の範囲として示されているのは？","プロモーターからターミネーターまで","開始コドンから終止コドンまでだけ","mRNA全体","タンパク質全体","資料ではプロモーターからターミネーターまでを遺伝子として説明している。"],
+["gene","DNAの糖はどれ？","デオキシリボース","リボース","グルコース","フルクトース","DNAのヌクレオチドは五炭糖のデオキシリボース、リン酸、塩基からなる。"],
+["gene","RNAに含まれ、DNAには通常含まれない塩基は？","ウラシル","チミン","グアニン","シトシン","RNAではチミンの代わりにウラシルが使われる。"],
+["gene","翻訳を担う装置はどれ？","リボソーム","RNAポリメラーゼ","DNAリガーゼ","プライマー","リボソームはmRNAの情報を読み取り、アミノ酸をつないでタンパク質を合成する。"],
+["gene","リボソームの大サブユニットの主な機能は？","アミノ酸の伸長","コドンの対応を確認する","DNAをほどく","RNAを合成する","講義資料では、大サブユニットはアミノ酸の伸長、小サブユニットはコドンの対応に関わると説明されている。"],
+["gene","リボソームの小サブユニットの主な機能は？","コドンの対応","アミノ酸の伸長","DNAの複製","RNAプライマーの合成","小サブユニットはmRNAのコドンとtRNAの対応に関わる。"],
+["gene","リボソームの本体となる成分は？","rRNA","DNA","脂質","糖","リボソームはrRNAと複数のタンパク質からなるが、資料では本体はrRNAと説明されている。"],
+["rep1","DNAを構成するヌクレオチドの3要素は？","五炭糖・リン酸・塩基","アミノ酸・リン酸・脂質","糖・タンパク質・塩基","リボース・アミノ酸・脂質","DNAのヌクレオチドは五炭糖、リン酸、塩基から構成される。"],
+["rep1","DNAの塩基の組み合わせとして正しいものは？","A-T、G-C","A-G、T-C","A-C、G-T","A-U、G-C","DNAではアデニンとチミン、グアニンとシトシンが相補的な塩基対を作る。"],
+["rep1","DNAの二本鎖の向きは？","逆平行","平行","同じ方向に並ぶ","向きは存在しない","DNA二本鎖は、一方が5’→3’、もう一方が3’→5’となる逆平行構造。"],
+["rep1","DNAポリメラーゼがDNA鎖を伸ばす方向は？","5’→3’","3’→5’","両方向","方向は一定しない","DNAポリメラーゼは新しい鎖の3’末端にヌクレオチドを付加するため、合成は5’→3’となる。"],
+["rep1","DNA複製の方法は？","半保存的複製","保存的複製","分散的複製のみ","転写的複製","半保存的複製では、複製後の各DNA二本鎖に親由来の鎖が1本ずつ残る。"],
+["rep1","半保存的複製を正しく説明しているのは？","親DNAの鎖を1本ずつ保存し、新しい鎖を合成する","親DNA二本鎖をそのまま残し、別に新しい二本鎖を作る","親DNAを全て分解してから合成する","DNAをRNAに置き換える","複製後のDNAは親鎖1本と新生鎖1本からなる。"],
+["rep1","DNAポリメラーゼが新しい鎖に付加するヌクレオチドは？","親鎖と相補的な塩基を持つもの","親鎖と同じ塩基だけ","ランダムな塩基","アミノ酸","DNAポリメラーゼは鋳型となる親鎖の塩基と相補的なヌクレオチドを付加する。"],
+["rep1","DNAポリメラーゼが合成を開始するために必要なものは？","プライマー","プロモーター","ターミネーター","コドン","DNAポリメラーゼは何もないところから合成を開始できず、プライマーの3’末端を起点に伸長する。"],
+["rep1","DNAポリメラーゼの校正で誤った塩基を取り除く方向は？","3’→5’","5’→3’","両方向","方向は決まっていない","講義資料では3’→5’エキソヌクレアーゼ活性によって誤ったヌクレオチドを除去すると説明されている。"],
+["rep1","DNA合成が5’→3’であることと関係する校正の利点は？","誤りを除去した後も、伸長に必要なエネルギーを使える","DNAが一本鎖になる","塩基対が不要になる","RNAが不要になる","資料では、3’→5’合成だと校正で末端の三リン酸由来のエネルギーを失い、その後の付加が難しくなると説明されている。"],
+["rep1","複製フォークとは何か？","DNA二本鎖がほどけ、複製が進む部分","翻訳が行われる場所","タンパク質が分解される場所","細胞分裂の境界","DNAの水素結合が切断され、一本鎖となった部分に複製フォークが形成される。"],
+["rep2","ヘリカーゼの働きは？","DNA二本鎖をほどく","岡崎フラグメントを連結する","RNAプライマーを作る","DNAのねじれを解消する","ヘリカーゼは塩基間の水素結合を切断してDNA二本鎖をほどく。"],
+["rep2","ヘリカーゼが切断する結合は？","塩基間の水素結合","糖とリン酸のホスホジエステル結合","ペプチド結合","イオン結合","ヘリカーゼは塩基同士をつなぐ水素結合を切断する。糖とリン酸の骨格は切断しない。"],
+["rep2","プライマーを合成する酵素は？","プライマーゼ","DNAリガーゼ","トポイソメラーゼ","ヘリカーゼ","プライマーゼはDNAを鋳型として短いRNAプライマーを合成する。"],
+["rep2","RNAプライマーの役割は？","DNAポリメラーゼが合成を始める足場になる","DNA二本鎖をほどく","岡崎フラグメントを連結する","ねじれを解消する","DNAポリメラーゼはプライマーの3’末端を起点にDNAを伸長する。"],
+["rep2","DNAリガーゼの働きは？","岡崎フラグメント同士を連結する","DNA二本鎖をほどく","RNAを合成する","複製起点を認識する","DNAリガーゼはDNA断片間をホスホジエステル結合でつなぐ。"],
+["rep2","一本鎖DNA結合タンパク質（SSB）の働きは？","一本鎖DNAを安定化する","DNAのねじれを解消する","DNAを合成する","RNAを分解する","SSBは一本鎖DNAに結合し、再び二本鎖になったり不安定な構造をとったりするのを防ぐ。"],
+["rep2","トポイソメラーゼの働きは？","DNAのひずみ・ねじれを解消する","RNAプライマーを合成する","岡崎フラグメントを連結する","塩基間の水素結合を作る","トポイソメラーゼはDNA鎖を一時的に切断・再結合し、複製フォーク先端のねじれを解消する。"],
+["rep2","DnaAの役割は？","原核生物の複製起点に結合する開始タンパク質","DNAを合成する酵素","岡崎フラグメントを連結する酵素","RNAを合成する酵素","DnaAは原核生物の複製開始時に複製起点へ結合する。"],
+["rep2","原核生物のDNA複製開始で、DnaAが結合した後に起こることは？","複製起点付近の二本鎖がゆるみ、ヘリカーゼが結合する","リボソームが結合する","細胞が分裂する","RNAが翻訳される","資料ではDnaA結合、反復配列の二本鎖のゆるみ、ヘリカーゼ結合という順で説明されている。"],
+["rep2","DNA複製においてDNAポリメラーゼが直接担う働きは？","相補的なヌクレオチドを付加してDNAを合成する","二本鎖をほどく","RNAプライマーを合成する","DNA断片を連結する","DNAポリメラーゼは親鎖に相補的なヌクレオチドを付加する酵素。"],
+["rep2","複製フォークの先端でDNAのねじれを解消する酵素は？","トポイソメラーゼ","プライマーゼ","DNAリガーゼ","RNAポリメラーゼ","複製フォークの先端ではDNAのねじれが生じるため、トポイソメラーゼが解消する。"],
+["rep2","ラギング鎖で岡崎フラグメントごとに必要となるものは？","RNAプライマー","プロモーター","ターミネーター","コドン","ラギング鎖は短い断片ごとに合成されるため、各断片の合成開始にRNAプライマーが必要。"],
+["cycle","真核生物の細胞周期の正しい順番は？","G1期→S期→G2期→M期","S期→G1期→M期→G2期","G2期→M期→S期→G1期","M期→S期→G1期→G2期","講義資料ではG1期、S期、G2期、M期の順に繰り返すと説明されている。"],
+["cycle","DNA複製が行われる時期は？","S期","G1期","G2期","M期","S期はSynthesis期で、DNA複製が開始し完了する時期。"],
+["cycle","G1期の主な役割として資料に示されているものは？","複製の準備段階・栄養状態のモニター","DNA複製の完了","染色体の分配","細胞質分裂","G1期はS期に向けた準備段階として説明されている。"],
+["cycle","G2期は主にどの段階？","複製した染色体が2つになり、分裂に向けて準備する段階","DNA複製を開始する段階","RNAを翻訳する段階","複製起点を初めて認識する段階","G2期はDNA複製後、M期に向けた段階。"],
+["cycle","M期は何を行う時期？","有糸分裂","DNA複製","転写","翻訳","M期はMitosis期で、染色体の分配を含む細胞分裂の段階。"],
+["cycle","真核生物の複製起点を認識する複合体は？","ORC","DnaA","SSB","DNAリガーゼ","ORCはOrigin Recognition Complexの略で、真核生物の複製起点を認識する。"],
+["cycle","真核生物でヘリカーゼとして働く複合体は？","Mcm2-7","ORC","Cdc6","Cdt1","資料ではMcm2-7が真核生物のヘリカーゼとして示されている。"],
+["cycle","G1期にヘリカーゼを複製起点へ装着するのに関わるタンパク質は？","Cdc6とCdt1","DnaAとSSB","DNAリガーゼとプライマーゼ","RNAポリメラーゼとrRNA","Cdc6とCdt1はヘリカーゼ装着タンパク質として働く。"],
+["cycle","真核生物でDNA複製が基本的に一回だけ起こる時期は？","S期","G1期","G2期","M期","真核生物では細胞周期ごとにS期で一回だけDNA複製が起こる。"],
+["cycle","S-Cdkが活性化するきっかけとして資料で説明されているものは？","Sサイクリン量の増加","DNA量の減少","リボソームの分解","RNAプライマーの消失","Sサイクリン量が増加するとS-Cdkが活性化し、複製開始を促す。"],
+["cycle","S-Cdkがヘリカーゼを活性化すると何が起こる？","DNA二本鎖がほどけ、複製フォークが形成される","岡崎フラグメントが翻訳される","細胞膜が分解される","転写が必ず停止する","ヘリカーゼが活性化すると塩基間の水素結合が切断され、DNA複製が始まる。"],
+["cycle","S期・G2期・M期に複製起点が再び使われないようにする仕組みは？","S-Cdkがヘリカーゼ装着タンパク質をリン酸化し、結合を阻害する","DNAリガーゼが複製起点を切断する","リボソームが複製起点を覆う","RNAポリメラーゼがDNAを分解する","S-CdkによるCdc6などのリン酸化・分解が続き、ヘリカーゼの再装着が阻害される。"],
+["cycle","S期内再複製禁止の目的は？","同じDNA領域が一つの細胞周期で複数回複製されるのを防ぐ","転写を完全に止める","DNAをRNAに変える","細胞周期を止める","DNA複製をS期に一回だけに制御し、DNA量が過剰に増えることを防ぐ。"],
+["past","過去問：DNAポリメラーゼが触媒する反応は？","DNA鎖へのヌクレオチド付加","DNA二本鎖の水素結合切断","岡崎フラグメントの連結","DNAのねじれ解消","DNAポリメラーゼは鋳型鎖に相補的なヌクレオチドを付加し、新しいDNA鎖を合成する。"],
+["past","過去問：DNA複製の方式は？","半保存的複製","保存的複製","転写","翻訳","過去問では、親DNAの鎖を一本ずつ保存して新しい鎖を合成する半保存的複製が問われている。"],
+["past","過去問：DNAの二本鎖の向きは？","逆平行","平行","同方向","無方向","一方の鎖が5’→3’、もう一方が3’→5’の逆平行。"],
+["past","過去問：ラギング鎖で生じる短いDNA断片は？","岡崎フラグメント","コドン","アンチコドン","プライマーゼ","ラギング鎖は不連続に合成され、短いDNA断片である岡崎フラグメントが生じる。"],
+["past","過去問：岡崎フラグメント同士をつなぐ酵素は？","DNAリガーゼ","ヘリカーゼ","プライマーゼ","DNAポリメラーゼ","DNAリガーゼが岡崎フラグメント間を連結する。"],
+["past","過去問：DNAのひずみを解消する酵素は？","トポイソメラーゼ","DNAリガーゼ","ヘリカーゼ","RNAポリメラーゼ","トポイソメラーゼはDNA鎖を一時的に切断・再結合してねじれを解消する。"],
+["past","過去問：遺伝子の説明として正しいものは？","タンパク質や機能性RNAを作るために必要なDNA領域","細胞内のDNAすべて","タンパク質そのもの","RNAだけからなる領域","講義資料の定義に沿うと、遺伝子はタンパク質や機能性RNAを作るために必要なDNA領域。"],
+["past","過去問：RNAポリメラーゼが結合し、転写を始める領域は？","プロモーター","ターミネーター","複製起点","岡崎フラグメント","プロモーターは転写開始に必要なDNA領域。"],
+["past","過去問：リボソームの構成成分として中心となるRNAは？","rRNA","mRNA","tRNA","プライマーRNA","リボソームはrRNAと複数のタンパク質から構成され、本体はrRNA。"],
+["past","過去問：細胞周期のうちDNA複製が起こるのは？","S期","G1期","G2期","M期","S期にDNA複製が開始し完了する。"],
+["past","過去問：原核生物の複製起点に結合する開始タンパク質は？","DnaA","ORC","Cdc6","Mcm2-7","原核生物のDNA複製開始ではDnaAが複製起点に結合する。"]
+];
+const data=raw.map((r,i)=>({id:i+1,cat:r[0],q:r[1],a:r[2],opts:r.slice(2,6),exp:r[6]}));
+const cats={gene:"第2回：遺伝子・転写・翻訳",rep1:"第3回：DNA複製の基本",rep2:"第4回：DNA複製に関わる酵素",cycle:"第5回：細胞周期・複製開始の調節",past:"過去問形式：総合確認"};
+const STORAGE_KEY="microbiology_genetics_quiz63_v1";
+let pool=[],pos=0,score=0,answered=false,wrong=new Set(),lastCat="all";
+let history=[];
+function loadSaved(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}");
+  wrong=new Set(Array.isArray(saved.wrong)?saved.wrong:[]);
+  history=Array.isArray(saved.history)?saved.history:[];
+ }catch(e){wrong=new Set();history=[];}
+}
+function saveSaved(){
+ try{localStorage.setItem(STORAGE_KEY,JSON.stringify({wrong:[...wrong],history}));}
+ catch(e){$("historySummary").textContent="このブラウザでは保存できませんでした。プライベートブラウズ設定などをご確認ください。";}
+}
+function renderHistory(){
+ const sessions=history.length;
+ const answeredTotal=history.reduce((s,h)=>s+h.total,0);
+ const correctTotal=history.reduce((s,h)=>s+h.score,0);
+ $("totalSessions").textContent=sessions;
+ $("totalAnswered").textContent=answeredTotal;
+ $("overallRate").textContent=answeredTotal?Math.round(correctTotal/answeredTotal*100)+"%":"—";
+ $("historySummary").textContent=sessions?`累計正解：${correctTotal}問 ／ 累計不正解：${answeredTotal-correctTotal}問`:"学習履歴はまだありません。";
+ $("historyList").innerHTML="";
+ history.slice().reverse().slice(0,20).forEach(h=>{
+  const d=document.createElement("div");d.className="reviewitem";
+  const date=new Date(h.date);
+  const stamp=isNaN(date.getTime())?h.date:date.toLocaleString("ja-JP");
+  const modeName=h.mode==="all"?"すべて":h.mode==="wrong"?"間違えた問題":(cats[h.mode]||h.mode);
+  const title=document.createElement("b");title.textContent=`${stamp}｜${modeName}`;
+  const detail=document.createElement("div");detail.className="small";
+  detail.textContent=`${h.score}/${h.total}問正解（${h.rate}%）`;
+  d.append(title,detail);$("historyList").appendChild(d);
+ });
+}
+const $=id=>document.getElementById(id);
+function shuffle(a){let b=[...a];for(let i=b.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+function start(mode){lastCat=mode||$("category").value;pool=lastCat==="all"?data.filter(x=>x.cat!=="past"):lastCat==="wrong"?data.filter(x=>wrong.has(x.id)):data.filter(x=>x.cat===lastCat);pool=shuffle(pool);pos=0;score=0;answered=false;$("result").classList.add("hidden");$("quiz").classList.remove("hidden");$("start").classList.add("hidden");$("next").classList.remove("hidden");render()}
+function render(){if(pos>=pool.length){finish();return}let x=pool[pos];answered=false;$("meta").textContent=`${cats[x.cat]}　｜　問題 ${pos+1}/${pool.length}`;$("qtext").textContent=x.q;$("options").innerHTML="";$("feedback").innerHTML="";$("next").disabled=true;$("next").textContent=pos===pool.length-1?"結果を見る":"次の問題";$("progressText").textContent=`${pos}/${pool.length} 問回答　・　正解 ${score} 問`;$("bar").style.width=`${pos/pool.length*100}%`;
+let opts=shuffle(x.opts.map((v,i)=>({v,correct:i===0})));opts.forEach((o,i)=>{let b=document.createElement("button");b.className="opt";b.textContent=`${"ABCD"[i]}. ${o.v}`;b.onclick=()=>choose(i,opts);$("options").appendChild(b)})}
+function choose(i,opts){if(answered)return;answered=true;let x=pool[pos],correct=opts[i].correct;if(correct)score++;else {wrong.add(x.id);saveSaved();}[...$("options").children].forEach((b,j)=>{b.disabled=true;if(opts[j].correct)b.classList.add("correct");if(j===i&&!correct)b.classList.add("wrong")});$("feedback").className="feedback "+(correct?"good":"bad");$("feedback").innerHTML=`<b>${correct?"正解！":"不正解"}</b><br>正解：${x.a}<br><br>${x.exp}`;$("next").disabled=false;$("progressText").textContent=`${pos+1}/${pool.length} 問回答　・　正解 ${score} 問`;updateWrong()}
+function finish(){
+ if(pool.length){
+  history.push({date:new Date().toISOString(),mode:lastCat,score,total:pool.length,rate:Math.round(score/pool.length*100)});
+  if(history.length>100)history=history.slice(-100);
+  saveSaved();renderHistory();
+ }
+ $("quiz").classList.add("hidden");$("result").classList.remove("hidden");$("score").textContent=`${score} / ${pool.length} 問正解`;$("resultText").textContent=pool.length?`正答率 ${Math.round(score/pool.length*100)}%。${score===pool.length?"全問正解！すばらしい！":"解説を確認して、間違えた問題をもう一度解いてみよう。"}`:"対象の問題がありません。";$("bar").style.width="100%";updateWrong()}
+function updateWrong(){$("wrongCount").textContent=`${wrong.size}問が復習リストに入っています。`;$("wrongList").innerHTML="";[...wrong].sort((a,b)=>a-b).forEach(id=>{let x=data.find(q=>q.id===id);let d=document.createElement("div");d.className="reviewitem";d.innerHTML=`<b>Q${id}｜${x.q}</b><div class="small">正解：${x.a}</div>`;$("wrongList").appendChild(d)})}
+$("start").onclick=()=>start();$("next").onclick=()=>{if(!answered)return;pos++;render()};$("restart").onclick=()=>start($("category").value);$("again").onclick=()=>start(lastCat);$("retryWrong").onclick=()=>{if(!wrong.size)return;start("wrong")};$("category").onchange=()=>{$("start").classList.remove("hidden");$("next").classList.add("hidden");$("qtext").textContent="「スタート」を押して始めよう。";$("meta").textContent="出題範囲を選択中";$("options").innerHTML="";$("feedback").innerHTML="";$("result").classList.add("hidden");$("quiz").classList.remove("hidden")};$("clearHistory").onclick=()=>{
+ if(!confirm("学習履歴をすべて消去しますか？"))return;
+ history=[];saveSaved();renderHistory();
+};
+$("clearWrong").onclick=()=>{
+ if(!confirm("間違えた問題の記録をすべて消去しますか？"))return;
+ wrong.clear();saveSaved();updateWrong();
+};
+loadSaved();updateWrong();renderHistory();
+</script></body></html>
